@@ -153,7 +153,7 @@ if [ -z "$1" ]; then
     echo "  1) install"
     echo "  2) update"
     echo "  3) remove"
-    read -rp "Choose [1-3]: " choice
+    read -rp "Choose [1-3]: " choice </dev/tty
     case "$choice" in
         1) ACTION=install ;;
         2) ACTION=update  ;;
