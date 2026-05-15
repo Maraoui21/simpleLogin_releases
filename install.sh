@@ -39,21 +39,17 @@ download_and_install() {
     curl -fsSL "$url" -o /tmp/SimpleLogin-linux.zip
 
     echo "[+] Installing to $INSTALL_DIR..."
-    rm -rf "$INSTALL_DIR"
-    mkdir -p "$INSTALL_DIR"
-    unzip -q /tmp/SimpleLogin-linux.zip -d "$INSTALL_DIR"
+    rm -rf /tmp/SimpleLogin-extract
+    mkdir -p /tmp/SimpleLogin-extract
+    unzip -q /tmp/SimpleLogin-linux.zip -d /tmp/SimpleLogin-extract
 
-    # flatten any nested dist/SimpleLogin structure
-    if [ ! -f "$BINARY" ]; then
-        inner=$(find "$INSTALL_DIR" -name "SimpleLogin" -type f | head -1)
-        if [ -n "$inner" ]; then
-            inner_dir=$(dirname "$inner")
-            if [ "$inner_dir" != "$INSTALL_DIR" ]; then
-                mv "$inner_dir"/* "$INSTALL_DIR/"
-                rm -rf "$INSTALL_DIR/dist" 2>/dev/null || true
-            fi
-        fi
-    fi
+    # find the actual app folder (handles dist/SimpleLogin or just SimpleLogin)
+    inner=$(find /tmp/SimpleLogin-extract -name "SimpleLogin" -type f | head -1)
+    inner_dir=$(dirname "$inner")
+
+    rm -rf "$INSTALL_DIR"
+    mv "$inner_dir" "$INSTALL_DIR"
+    rm -rf /tmp/SimpleLogin-extract
 
     chmod +x "$BINARY"
     echo "$version" > "$VERSION_FILE"
