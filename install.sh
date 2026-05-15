@@ -73,6 +73,7 @@ download_and_install() {
 create_launcher() {
     cat > /usr/local/bin/simplelogin <<EOF
 #!/bin/bash
+pkill -f "python.*main.py" 2>/dev/null; sleep 0.5
 export SIMPLELOGIN_DATA=$DATA_DIR
 cd $APP_DIR
 exec $VENV_DIR/bin/python main.py "\$@"
