@@ -148,7 +148,23 @@ cmd_remove() {
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
-case "${1:-install}" in
+if [ -z "$1" ]; then
+    echo "SimpleLogin Manager"
+    echo "  1) install"
+    echo "  2) update"
+    echo "  3) remove"
+    read -rp "Choose [1-3]: " choice
+    case "$choice" in
+        1) ACTION=install ;;
+        2) ACTION=update  ;;
+        3) ACTION=remove  ;;
+        *) echo "Invalid choice"; exit 1 ;;
+    esac
+else
+    ACTION="$1"
+fi
+
+case "$ACTION" in
     install) cmd_install ;;
     update)  cmd_update  ;;
     remove)  cmd_remove  ;;
