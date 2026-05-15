@@ -43,11 +43,15 @@ download_and_install() {
     mkdir -p "$INSTALL_DIR"
     unzip -q /tmp/SimpleLogin-linux.zip -d "$INSTALL_DIR"
 
-    # handle nested folder if zip contains a subfolder
+    # flatten any nested dist/SimpleLogin structure
     if [ ! -f "$BINARY" ]; then
-        inner=$(find "$INSTALL_DIR" -maxdepth 2 -name "SimpleLogin" -type f | head -1)
+        inner=$(find "$INSTALL_DIR" -name "SimpleLogin" -type f | head -1)
         if [ -n "$inner" ]; then
-            mv "$(dirname "$inner")"/* "$INSTALL_DIR/"
+            inner_dir=$(dirname "$inner")
+            if [ "$inner_dir" != "$INSTALL_DIR" ]; then
+                mv "$inner_dir"/* "$INSTALL_DIR/"
+                rm -rf "$INSTALL_DIR/dist" 2>/dev/null || true
+            fi
         fi
     fi
 
