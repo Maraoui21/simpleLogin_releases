@@ -81,7 +81,15 @@ cd $APP_DIR
 exec $VENV_DIR/bin/python main.py "\$@"
 EOF
     chmod +x /usr/local/bin/simplelogin
+
+    cat > /usr/local/bin/simplelogin-update <<EOF
+#!/bin/bash
+curl -fsSL https://raw.githubusercontent.com/Maraoui21/simpleLogin_releases/main/install.sh | sudo bash -s update
+EOF
+    chmod +x /usr/local/bin/simplelogin-update
+
     echo "[✓] Launcher created — run with: simplelogin"
+    echo "[✓] Updater created  — update with: sudo simplelogin-update"
 }
 
 create_desktop_entry() {
