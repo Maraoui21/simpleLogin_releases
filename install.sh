@@ -67,6 +67,16 @@ download_and_install() {
     "$VENV_DIR/bin/pip" install --quiet -r "$APP_DIR/requirements.txt"
 
     echo "$version" > "$VERSION_FILE"
+
+    # This whole function runs as root (via sudo), but the "simplelogin"
+    # launcher runs the app as a normal user with no sudo — hand ownership
+    # of everything back to the real user so it can write config.json,
+    # groups/, error.log, etc. Without this, every update re-roots the app
+    # directory and the app silently fails to persist state.
+    if [ -n "$SUDO_USER" ]; then
+        chown -R "$SUDO_USER:$(id -gn "$SUDO_USER")" "$INSTALL_DIR"
+    fi
+
     echo "[✓] SimpleLogin $version installed"
 }
 
