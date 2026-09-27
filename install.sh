@@ -45,6 +45,13 @@ download_and_install() {
     local version=$1
     local url="https://github.com/$REPO/releases/download/$version/SimpleLogin-linux.zip"
 
+    # This function rm -rf's $APP_DIR below. If the invoking shell (or this
+    # script's own process, inherited from it) is sitting inside that
+    # directory when that happens, every command afterward — including pip —
+    # inherits a dangling cwd and fails with confusing getcwd errors. Move
+    # somewhere that can never be deleted out from under us first.
+    cd /tmp
+
     echo "[+] Downloading SimpleLogin $version..."
     curl -fsSL "$url" -o /tmp/SimpleLogin-linux.zip
 
